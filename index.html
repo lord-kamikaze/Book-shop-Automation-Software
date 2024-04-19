@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BookShop Automation System</title>
+    <link rel="stylesheet" href="sstyle.css">
+</head>
+<body>
+    
+    <div class="container">
+        
+        <!-- <div class="box" onclick="window.location.href='customer_login/login.php';"target="_blank"> -->
+        <div class="box" onclick="window.location.href='//localhost/lab%20swe/customer_login/login.php';"target="_blank">
+        <!-- <div class="box" onclick=`<script>  window.open("user_login", "_blank")</script>`> -->
+           
+            <h2>Customer</h2>
+        </div>
+        <div class="box" onclick="window.location.href='//localhost/lab%20swe/employee_login/login.php';"target="_blank">
+            <h2>Employee</h2>
+        </div>
+    </div>
+
+</body>
+</html>
+
+
+
+
+
+<form id="bookForm" action="" method="post" enctype="multipart/form-data">
+    <label for="book_image">Book Image:</label>
+    <input type="file" name="book_image" id="book_image" required><br>
+    <label for="book_name">Book Name:</label>
+    <input type="text" name="book_name" id="book_name" required><br>
+    <label for="isbn">ISBN:</label>
+    <input type="text" name="isbn" id="isbn" required><br>
+    <label for="author_name">Author Name:</label>
+    <input type="text" name="author_name" id="author_name" required><br>
+    <label for="quantity">Quantity:</label>
+    <input type="number" name="quantity" id="quantity" required><br>
+    <label for="available">Available:</label>
+    <input type="checkbox" name="available" id="available"><br>
+    <label for="price">Price:</label>
+    <input type="number" name="price" id="price" required><br>
+
+    <input type="submit" value="Add Book">
+</form>
+<h1>Books Available</h1>
+<div class="container">
+    
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Book Image</th>
+                <th>Book Name</th>
+                <th>ISBN</th>
+                <th>Author</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th>Available</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php
+            $conn = new mysqli("localhost", "root", "", "login_employee");
+            if ($conn->connect_error) {
+                die("Connection failed: " . $conn->connect_error);
+            }
+           
+            
+            $sql = "SELECT * FROM books";
+            $result = $conn->query($sql);
+            
+            if ($result->num_rows > 0) {
+                
+                while($row = $result->fetch_assoc()) {
+
+                    
+                    echo "<tr>";
+                    echo "<td><img src='" . $row['book_image'] . "' alt='" . $row['book_name'] . "'></td>";
+                    echo "<td>" . $row['book_name'] . "</td>";
+                    echo "<td>" . $row['isbn'] . "</td>";
+                    echo "<td>" . $row['author_name'] . "</td>";
+                    echo "<td>" . $row['quantity'] . "</td>";
+                    echo "<td>" . $row['Price'] . "</td>";
+                    echo "<td>" . ($row['available'] ? 'Yes' : 'No') . "</td>";
+                    
+                    echo "<td><a href='edit_book.php?isbn=" . $row['isbn'] . "' class='btn btn-primary'>Edit</a> <a href='delete_book.php?isbn=" . $row['isbn'] . "' class='btn btn-danger'>Delete</a></td>";
+                    echo "</tr>";
+                }
+            } else {
+                echo "<tr><td colspan='8'>No books available</td></tr>";
+            }
+            // if ($stmt->execute()) {
+            //     echo "New record inserted successfully";
+            // } else {
+            //     echo "Error: " . $stmt->error;
+            // }
+            $conn->close();
+            ?>
+        </tbody>
+    </table>
+</div>
